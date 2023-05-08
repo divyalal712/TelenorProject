@@ -29,7 +29,6 @@ public class VersionResource {
     public VersionResource() {
         this.httpClient = HttpClient.newHttpClient();
     }
-
     @GET
     @Path("/version")
     @Produces(MediaType.APPLICATION_JSON)

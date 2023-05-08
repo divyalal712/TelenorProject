@@ -36,7 +36,6 @@ public class VersionTest {
         when(httpClient.send(any(), any())).thenReturn(response);
         ReleaseResponse release1 = version.getReleaseVersion("arm");
         Assertions.assertNotNull(release1);
-
     }
 
     @Test
