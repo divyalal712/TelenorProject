@@ -18,7 +18,6 @@ public class VersionResource {
             "_size=normal&image_type=jdk&page=2&page_size=10&project=jdk&release_type=ga" +
             "&sort_method=DEFAULT&sort_order=DESC&vendor=adoptopenjdk";
     private static final Logger LOG = LoggerFactory.getLogger(VersionResource.class);
-
     private final ReleaseMapper releaseMapper = new ReleaseMapper();
     private HttpClient httpClient;
 

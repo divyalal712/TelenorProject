@@ -24,7 +24,6 @@ public class VersionTest {
         ReleaseResponse responseAsObject = new ObjectMapper().readValue(response, ReleaseResponse.class);
         return responseAsObject;
     }
-
     @Test
     public void successTest() throws IOException, InterruptedException, ServiceException {
         HttpClient httpClient = mock(HttpClient.class);
