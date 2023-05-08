@@ -2,10 +2,8 @@ package no.training.project;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import no.training.project.exception.ServiceException;
-import no.training.project.model.ExternalResponse;
-import no.training.project.model.Release;
-import no.training.project.resource.martianweather.MartianWeather;
-import no.training.project.resource.version.Version;
+import no.training.project.model.ReleaseResponse;
+import no.training.project.resource.version.VersionResource;
 import org.junit.jupiter.api.Assertions;
 import org.mockito.Mock;
 import java.io.IOException;
@@ -21,9 +19,9 @@ public class VersionTest {
 
     @Mock
     private HttpClient defaultHttpClient;
-    private static Release getRelease() throws IOException {
+    private static ReleaseResponse getRelease() throws IOException {
         String response = new String(VersionTest.class.getResourceAsStream("/mock-data/release-response.json").readAllBytes());
-        Release responseAsObject = new ObjectMapper().readValue(response, Release.class);
+        ReleaseResponse responseAsObject = new ObjectMapper().readValue(response, ReleaseResponse.class);
         return responseAsObject;
     }
 
@@ -32,14 +30,11 @@ public class VersionTest {
         HttpClient httpClient = mock(HttpClient.class);
         HttpResponse response = mock(HttpResponse.class);
         when(response.statusCode()).thenReturn(200);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        Release release = getRelease();
-        String externalResponseString = objectMapper.writeValueAsString(release);
+        String externalResponseString = new String(VersionTest.class.getResourceAsStream("/mock-data/release-response.json").readAllBytes());
         when(response.body()).thenReturn(externalResponseString);
-        Version version = new Version(httpClient);
+        VersionResource version = new VersionResource(httpClient);
         when(httpClient.send(any(), any())).thenReturn(response);
-        Release release1 = version.getReleaseVersion("arm");
+        ReleaseResponse release1 = version.getReleaseVersion("arm");
         Assertions.assertNotNull(release1);
 
     }
@@ -50,7 +45,7 @@ public class VersionTest {
             HttpClient httpClient = mock(HttpClient.class);
             HttpResponse response = mock(HttpResponse.class);
             when(response.statusCode()).thenReturn(404);
-            Version version = new Version(httpClient);
+            VersionResource version = new VersionResource(httpClient);
             when(httpClient.send(any(), any())).thenReturn(response);
             version.getReleaseVersion("");
         } catch (ServiceException exception) {
@@ -65,7 +60,7 @@ public class VersionTest {
             HttpClient httpCLient = mock(HttpClient.class);
             HttpResponse response = mock(HttpResponse.class);
             when(response.statusCode()).thenReturn(500);
-            Version version = new Version(httpCLient);
+            VersionResource version = new VersionResource(httpCLient);
             when(httpCLient.send(any(), any())).thenReturn(response);
             version.getReleaseVersion("");
         }
@@ -79,7 +74,7 @@ public class VersionTest {
     public void getHandleException() throws IOException, InterruptedException, ServiceException {
         try {
             HttpClient httpClient = mock(HttpClient.class);
-            Version version = new Version(httpClient);
+            VersionResource version = new VersionResource(httpClient);
 
             when(httpClient.send(any(), any())).thenThrow(new RuntimeException("Found Runtime Exception"));
             version.getReleaseVersion("");
