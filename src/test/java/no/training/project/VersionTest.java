@@ -9,14 +9,13 @@ import org.mockito.Mock;
 import java.io.IOException;
 import java.net.http.HttpClient;
 import java.net.http.HttpResponse;
+import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import org.junit.jupiter.api.Test;
 
 public class VersionTest {
-    private HttpResponse<Object> Exception;
-
     @Mock
     private HttpClient defaultHttpClient;
     private static ReleaseResponse getRelease() throws IOException {
@@ -31,9 +30,12 @@ public class VersionTest {
         when(response.statusCode()).thenReturn(200);
         String externalResponseString = new String(VersionTest.class.getResourceAsStream("/mock-data/release-response.json").readAllBytes());
         when(response.body()).thenReturn(externalResponseString);
+
+        HttpResponse response2= mock(HttpResponse.class);
+        when(response2.statusCode()).thenReturn(404);
         VersionResource version = new VersionResource(httpClient);
-        when(httpClient.send(any(), any())).thenReturn(response);
-        ReleaseResponse release1 = version.getReleaseVersion("arm");
+        when(httpClient.send(any(), any())).thenReturn(response,response2);
+        List<ReleaseResponse> release1 = version.getReleaseVersion("arm");
         Assertions.assertNotNull(release1);
     }
 
@@ -67,7 +69,6 @@ public class VersionTest {
             Assertions.assertEquals(500,exception.getStatusCode());
         }
     }
-
     @Test
     public void getHandleException() throws IOException, InterruptedException, ServiceException {
         try {
@@ -81,3 +82,7 @@ public class VersionTest {
         }
     }
 }
+
+
+
+
