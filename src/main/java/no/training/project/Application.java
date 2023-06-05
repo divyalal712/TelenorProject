@@ -10,7 +10,6 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.net.URI;
-
 public class Application {
     private static final Logger LOG = LoggerFactory.getLogger(Application.class);
     public static final URI BASE_URI = URI.create("http://0.0.0.0:8080");
