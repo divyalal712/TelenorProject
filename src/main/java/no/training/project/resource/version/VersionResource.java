@@ -1,6 +1,10 @@
 package no.training.project.resource.version;
 
-import jakarta.ws.rs.*;
+import jakarta.ws.rs.DefaultValue;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import no.training.project.Mapper.ReleaseMapper;
 import no.training.project.exception.ServiceException;
@@ -36,9 +40,9 @@ public class VersionResource {
     @GET
     @Path("/version")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<ReleaseResponse> getReleaseVersion(@QueryParam("architecture") @DefaultValue("x32") String architecture)
+    public List<String> getReleaseVersion(@QueryParam("architecture") @DefaultValue("x32") String architecture)
             throws IOException, InterruptedException, ServiceException {
-        List<ReleaseResponse> allpages = new ArrayList<>();
+       List<String> allpages = new ArrayList<>();
         try {
             int pageNumber = 0;
             while (true) {
@@ -48,12 +52,12 @@ public class VersionResource {
                 HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
                 if (response.statusCode() == 200) {
-                    ReleaseResponse releases = releaseMapper.getReleaseMapperObject(response);
-                    LOG.debug("Returns the external response: {}", releases != null);
-                    if (releases == null || releases.releases().isEmpty()) {
+                    ReleaseResponse releaseResponse = releaseMapper.getReleaseMapperObject(response);
+                    LOG.debug("Returns the external response: {}", releaseResponse != null);
+                    if (releaseResponse == null || releaseResponse.releases().isEmpty()) {
                         break;
                     }
-                    allpages.add(releases);
+                    allpages.addAll(releaseResponse.releases());
                     pageNumber++;
                 } else {
                     LOG.debug("External call with status code {}, message {} for page :{}", response.statusCode(), response.body(), pageNumber);

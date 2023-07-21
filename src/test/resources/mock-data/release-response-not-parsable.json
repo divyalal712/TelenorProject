@@ -1,0 +1,5 @@
+{
+  "release": "jdk-15+36",
+  "release1":  "jdk-14.0.1+7.1",
+  "release2":  "jdk-14.0.2+12"
+}
