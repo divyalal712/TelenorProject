@@ -42,34 +42,35 @@ public class VersionResource {
     @Produces(MediaType.APPLICATION_JSON)
     public List<String> getReleaseVersion(@QueryParam("architecture") @DefaultValue("x32") String architecture)
             throws IOException, InterruptedException, ServiceException {
-       List<String> allpages = new ArrayList<>();
-        try {
+        List<String> allpages = new ArrayList<>();
             int pageNumber = 0;
-            while (true) {
-                String uri = String.format(JAVA_VERSION_URI, architecture, pageNumber);
-                HttpRequest request = HttpRequest.newBuilder().uri(URI.create(uri))
-                        .method("GET", HttpRequest.BodyPublishers.noBody()).build();
-                HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-
-                if (response.statusCode() == 200) {
-                    ReleaseResponse releaseResponse = releaseMapper.getReleaseMapperObject(response);
-                    LOG.debug("Returns the external response: {}", releaseResponse != null);
-                    if (releaseResponse == null || releaseResponse.releases().isEmpty()) {
-                        break;
+            boolean lastPage = false;
+            boolean error = false;
+            try {
+                while (!lastPage && !error) {
+                    String uri = String.format(JAVA_VERSION_URI, architecture, pageNumber);
+                    HttpRequest request = HttpRequest.newBuilder().uri(URI.create(uri))
+                            .method("GET", HttpRequest.BodyPublishers.noBody()).build();
+                    HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+                    // lastPage = releaseResponse == null || releaseResponse.releases().isEmpty();
+                    if (response.statusCode() == 200) {
+                        ReleaseResponse releaseResponse = releaseMapper.getReleaseMapperObject(response);
+                        LOG.debug("Returns the external response: {}", releaseResponse != null);
+                        if (lastPage = releaseResponse == null || releaseResponse.releases().isEmpty()) {
+                            break;
+                        }
+                        pageNumber++;
+                        allpages.addAll(releaseResponse.releases());
                     }
-                    allpages.addAll(releaseResponse.releases());
-                    pageNumber++;
-                } else {
-                    LOG.debug("External call with status code {}, message {} for page :{}", response.statusCode(), response.body(), pageNumber);
-                    break;
-                }
+                        else{
+                            LOG.error("External call error with status code {}, message {} for page :{}", response.statusCode(), response.body(), pageNumber);
+                            break;
+                        }
+                    }
+            } catch (Exception e) {
+                LOG.error("Exception found", e);
+                throw e;
             }
-        } catch (Exception e) {
-            LOG.error("Exception found", e);
-            throw e;
+            return allpages;
         }
-        return allpages;
     }
-}
-
-

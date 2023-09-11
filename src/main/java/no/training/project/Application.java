@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.net.URI;
 public class Application {
     private static final Logger LOG = LoggerFactory.getLogger(Application.class);
-    public static final URI BASE_URI = URI.create("http://localhost:8080");
+    public static final URI BASE_URI = URI.create("http://localhost:8089");
     public static void main(String[] args) {
         ResourceConfig config = new ResourceConfig();
         config.register(HealthResource.class);
