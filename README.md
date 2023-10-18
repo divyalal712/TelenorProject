@@ -101,5 +101,3 @@ Includes the tests (with AdoptOpenJDK client mock), logging and error handling.
 
 #### TASK 6:
 Dockerise martian app and run it in minikube.
-README.md
-Displaying README.md.
