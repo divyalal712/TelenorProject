@@ -24,7 +24,6 @@ Create a endpoint which gives you a solar date - Earth date to Curiosity sol con
 
 Receives and optional date in ISO 8601 format. If not specified, takes current date. Converts date to a sol using this rough formula:
 
-
 The logic to calculate the solar date is as follows
 Ceil(Diff * 86400 / 88775.245)
 Where Diff is difference between provided date and 06.08.2012 (Curiosity landing date) in days, Ceil is rounding up to the closest integer. For 6/15/2022 should give 3504.
