@@ -1,4 +1,18 @@
 
+# This project is a sandbox project normally all the interns get while doing internship
+
+### Prerequisites Before you begin, ensure you have the following installed:
+1. Java Development Kit (JDK): Download and Install JDK
+2. Gradle: Download and Install Maven
+
+### Sandbox application is created with the same technologies what were used in production code — Java, Gradle, Grizzly, Jersey
+
+### It’s a tiny integration hub wrapping existing public APIs.
+
+### Backend and Run setup
+1. ./gradlew build
+2. Run the class in which main method exist which is Application.java
+
 ### The whole project is divide into the following task and each tasks were done in different branch, reviewed and merged.
 #### TASK 1 :
 
